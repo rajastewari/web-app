@@ -9,7 +9,7 @@ form.addEventListener('submit', async function(e) {
     const password = document.getElementById('password').value;
 
     // send request to server
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('https://web-app-backend-qh5w.onrender.com/login', {
         
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
