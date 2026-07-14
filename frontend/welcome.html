@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- metadata -->
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+
+<body>
+  
+    <div class="card" style="text-align: center;">
+        
+        <h1>Hello, <span id="username"></span>!</h1>
+        <p>You're signed in successfully.</p>
+        <button onclick="signOut()">Sign out</button>
+    
+    </div>
+
+    <script>
+        
+        const user = localStorage.getItem('user');
+        if (!user) {
+            window.location.href = 'index.html';
+        }
+        document.getElementById('username').textContent = user;
+
+        function signOut() {
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+        }
+
+    </script>
+
+</body>
+</html>

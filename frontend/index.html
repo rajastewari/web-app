@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- metadata -->
+<head>
+    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Sign In </title>
+
+    <!-- linking css and js -->
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+
+</head>
+
+<body>
+    
+    <div class="card">
+        
+        <h1>Welcome back</h1>
+        <p>Sign in to your account.</p>
+
+        <form id="login-form" action="/login" method="POST">
+            
+            <label> Username </label>
+            <input type="text" id="username" placeholder="Enter your username" />
+
+            <label> Password </label>
+            <input type="password" id="password" placeholder="Enter your password" />
+
+            <button type="submit">Sign in</button>
+        
+        </form>
+
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748B;">
+            No account? <a href="register.html">Create one</a>
+        </p>
+    
+    </div>
+
+</body>
+
+
+</html>
