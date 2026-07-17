@@ -4,10 +4,11 @@
 <!-- metadata -->
 <head>
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title> Welcome </title>
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -16,23 +17,29 @@
   
     <div class="card" style="text-align: center;">
         
-        <h1>Hello, <span id="username"></span>!</h1>
-        <p>You're signed in successfully.</p>
-        <button onclick="signOut()">Sign out</button>
+        <h1> Hello, <span id="username"></span>! </h1> <!-- populated by JS -->
+        <p> You're signed in successfully. </p>
+        <button onclick="signOut()"> Sign out </button>
     
     </div>
 
     <script>
         
         const user = localStorage.getItem('user');
+        
+        // if no user saved, redirect to login
         if (!user) {
             window.location.href = 'index.html';
         }
+
+        // populate username
         document.getElementById('username').textContent = user;
 
+        // sign out function
         function signOut() {
-        localStorage.removeItem('user');
-        window.location.href = 'index.html';
+            // remove user then redirect
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
         }
 
     </script>

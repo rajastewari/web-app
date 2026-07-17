@@ -56,3 +56,9 @@ button {
 button:hover {
   background: #4338CA;
 }
+
+.login-footer {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #64748B;
+}
