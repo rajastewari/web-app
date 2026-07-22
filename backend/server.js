@@ -8,8 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// if no users.json file exists, create one
+// set path to user.json file 
 const DB_PATH = path.join(__dirname, 'users.json');
+// if no users.json file exists, create one
 if (!fs.existsSync(DB_PATH)) {
     fs.writeFileSync(DB_PATH, JSON.stringify([]));
 }
