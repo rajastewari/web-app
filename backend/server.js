@@ -1,46 +1,31 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const { pool, initDB } = require('./db');
+const crypto = require('crypto');
+const { client: redis, connectRedis } = require('./cache');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// set path to user.json file 
-const DB_PATH = path.join(__dirname, 'users.json');
-// if no users.json file exists, create one
-if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify([]));
-}
-
-
-// helper functions to read/write users to the JSON file
-function getUsers() {
-  return JSON.parse(fs.readFileSync(DB_PATH));
-}
-function saveUsers(users) {
-    fs.writeFileSync(DB_PATH, JSON.stringify(users));
-}
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // register endpoint
 app.post('/register', async (req, res) => {
 
     // take input from frontend
     const { username, password } = req.body;
-    const users = getUsers();
-    const exists = users.find(u => u.username === username);
+    const result = await pool.query('SELECT id, password_hash FROM users WHERE username = $1', [username]);
 
     // check if user exists
-    if (exists) {
+    if (result.rows.length > 0) {
         return res.json({ success: false, message: 'Username already taken' });
     }
 
     // hash password and save user
     const hashed = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashed });
-    saveUsers(users);
+    await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', [username, hashed]);
     res.json({ success: true, message: 'Account created' });
 });
 
@@ -49,24 +34,48 @@ app.post('/login', async (req, res) => {
 
     // take input from frontend
     const { username, password } = req.body;
-    const users = getUsers();
-    const user = users.find(u => u.username === username);
+    const result = await pool.query('SELECT id, password_hash FROM users WHERE username = $1', [username]);
 
     // check if user exists
-    if (!user) {
+    if (result.rows.length === 0) {
         return res.json({ success: false, message: 'User not found' });
     }
-
+    const user = result.rows[0];
     // check if password matches
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password_hash);
     if (match) {
-        res.json({ success: true, username });
+        const token = crypto.randomUUID();
+        await redis.set('session:' + token, username, { EX: 86400 });
+        res.json({ success: true, username, token });
     } else {
         res.json({ success: false, message: 'Incorrect password' });
     }
 });
 
-// start server
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
+// welcome endpoint
+app.get('/welcome', async (req, res) => {
+    // load token from request header
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {  // if hitting welcome endpoint without token
+        return res.status(401).json({ success: false, message: 'No active session' });
+    }
+    const token = authHeader.replace('Bearer ', '');
+
+    // check if token exists and is valid in Redis
+    const username = await redis.get('session:' + token);
+    if (!username) {
+        return res.status(401).json({ success: false, message: 'Session expired' });
+    }
+    res.json({ success: true, username });
 });
+
+// function to start server
+async function start() {
+    await connectRedis(); // connect to Redis first
+    await initDB(); // initialize database first
+    app.listen(3000, () => {
+        console.log('Server running on port 3000');
+    });
+}
+
+start();

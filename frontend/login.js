@@ -11,7 +11,8 @@ form.addEventListener('submit', async function (e) {
     const password = document.getElementById('password').value;
 
     // POST request to login endpoint
-    const response = await fetch('https://web-app-backend-qh5w.onrender.com/login', {
+    // https://web-app-backend-qh5w.onrender.com/login
+    const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -22,6 +23,7 @@ form.addEventListener('submit', async function (e) {
 
     if (data.success) {
         localStorage.setItem('user', data.username);
+        localStorage.setItem('token', data.token);
         window.location.href = 'welcome.html';
     } else {
         alert(data.message); // show error message from backend as popup

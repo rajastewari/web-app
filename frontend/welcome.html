@@ -26,11 +26,27 @@
     <script>
         
         const user = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
         
         // if no user saved, redirect to login
         if (!user) {
             window.location.href = 'index.html';
         }
+
+        // call welcome
+        fetch('http://localhost:3000/welcome', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                window.location.href = 'index.html';
+            }
+        });
+
 
         // populate username
         document.getElementById('username').textContent = user;
@@ -39,6 +55,7 @@
         function signOut() {
             // remove user then redirect
             localStorage.removeItem('user');
+            localStorage.removeItem('token');
             window.location.href = 'index.html';
         }
 
