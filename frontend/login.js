@@ -12,7 +12,7 @@ form.addEventListener('submit', async function (e) {
 
     // POST request to login endpoint
     // https://web-app-backend-qh5w.onrender.com/login
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
