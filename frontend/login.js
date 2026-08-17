@@ -11,7 +11,6 @@ form.addEventListener('submit', async function (e) {
     const password = document.getElementById('password').value;
 
     // POST request to login endpoint
-    // https://web-app-backend-qh5w.onrender.com/login
     const response = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -11,7 +11,6 @@ form.addEventListener('submit', async function (e) {
     const password = document.getElementById('password').value;
 
     // POST request to register endpoint
-    // https://web-app-backend-qh5w.onrender.com/register
     const response = await fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
