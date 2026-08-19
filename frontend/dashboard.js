@@ -13,12 +13,12 @@ fetch('/welcome', {
         'Authorization': `Bearer ${token}`
     }
 })
-.then(response => response.json())
-.then(data => {
-    if (!data.success) {
-        window.location.href = 'index.html';
-    }
-});
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            window.location.href = 'index.html';
+        }
+    });
 
 document.getElementById('username').textContent = user;
 
