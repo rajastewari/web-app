@@ -30,9 +30,10 @@ function signOut() {
 
 function renderTicker(tickerData) {
     const track = document.getElementById('ticker-track');
+    const validItems = tickerData.filter(item => item.price !== null); // checking ticker data is valid
 
-    // build the items twice back-to-back so the CSS animation can loop seamlessly
-    const html = tickerData.map(item => `
+    // build the items twice b2b so the CSS animation can loop seamlessly
+    const html = validItems.map(item => `
         <div class="ticker-item">
             <span class="name">${item.name}</span>
             <span class="price">$${item.price.toFixed(2)}</span>

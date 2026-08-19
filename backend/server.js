@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const { pool, initDB } = require('./db');
@@ -7,7 +6,6 @@ const crypto = require('crypto');
 const { client: redis, connectRedis } = require('./cache');
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -91,6 +89,12 @@ app.get('/api/market-summary', async (req, res) => {
         const quotes = await Promise.all(TICKER_SYMBOLS.map(async (t) => {
             const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${t.symbol}&token=${process.env.FINNHUB_API_KEY}`);
             const data = await response.json();
+
+            // check to ensure API returns valid data
+            if (typeof data.c !== 'number' || typeof data.dp !== 'number') {
+                return { name: t.name, price: null, changePercent: null, up: false };
+            }
+
             return {
                 name: t.name,
                 price: data.c,
@@ -108,7 +112,7 @@ app.get('/api/market-summary', async (req, res) => {
 // function to start server
 async function start() {
     await connectRedis(); // connect to Redis first
-    await initDB(); // initialize database first
+    await initDB(); // initialize database
     app.listen(3000, () => {
         console.log('Server running on port 3000');
     });
