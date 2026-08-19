@@ -23,7 +23,7 @@ form.addEventListener('submit', async function (e) {
     if (data.success) {
         localStorage.setItem('user', data.username);
         localStorage.setItem('token', data.token);
-        window.location.href = 'welcome.html';
+        window.location.href = 'dashboard.html';
     } else {
         alert(data.message); // show error message from backend as popup
     }

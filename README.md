@@ -18,4 +18,4 @@ A full stack web app with session-based authentication. Planning to build practi
 
 ## Host
 
-The backend is connected to Render to host while the frontend is hosted by Vercel.
+The backend is held within a Docker container and then hosted on Render.

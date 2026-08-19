@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <!-- Update name later -->
+        <div class="brand">App Name</div>
+
+        <nav class="nav">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="lookup.html">Lookup</a>
+            <a href="premium.html">Premium</a>
+        </nav>
+
+        <div class="user-menu">
+            <span id="username"></span>
+            <button onclick="signOut()">Sign out</button>
+        </div>
+
+    </header>
+
+    <!-- scrolling ticker tape, right to left -->
+    <div class="ticker-tape">
+        <div class="ticker-track" id="ticker-track">
+            <!-- items are duplicated in JS for a seamless loop -->
+        </div>
+    </div>
+
+    <main class="dashboard-grid">
+
+        <section class="card watchlist-card">
+
+            <h2>Your Watchlist</h2>
+            <ul class="watchlist" id="watchlist-list">
+                <li>
+                    <div class="ticker-symbol">AAPL<span class="company">Apple Inc.</span></div>
+                    <div class="ticker-price">$228.14<span class="change up">+1.24%</span></div>
+                </li>
+
+                <li>
+                    <div class="ticker-symbol">TSLA<span class="company">Tesla Inc.</span></div>
+                    <div class="ticker-price">$241.83<span class="change down">-0.68%</span></div>
+                </li>
+
+                <li>
+                    <div class="ticker-symbol">NVDA<span class="company">NVIDIA Corp.</span></div>
+                    <div class="ticker-price">$132.05<span class="change up">+2.91%</span></div>
+                </li>
+
+                <li>
+                    <div class="ticker-symbol">BTC<span class="company">Bitcoin</span></div>
+                    <div class="ticker-price">$67,842<span class="change up">+2.34%</span></div>
+                </li>
+            </ul>
+
+            <div class="add-ticker">
+                <input type="text" placeholder="Add a ticker (e.g. MSFT)">
+                <button>Add</button>
+            </div>
+        </section>
+
+        <section class="card portfolio-card">
+            <h2>Portfolio</h2>
+            <div class="portfolio-summary">
+                <div class="portfolio-value">$24,582.10</div>
+                <div class="portfolio-change up">+$342.18 (+1.41%)</div>
+            </div>
+
+            <svg class="portfolio-chart" viewBox="0 0 400 120" preserveAspectRatio="none">
+                <polyline fill="none" stroke="#22C55E" stroke-width="2"
+                    points="0,90 40,85 80,95 120,70 160,75 200,55 240,60 280,40 320,45 360,20 400,25" />
+            </svg>
+        </section>
+
+        <section class="card tips-card">
+            <h2>Premium Tips <small>portfolio advice, tailored for you</small></h2>
+
+            <div class="tips-content">
+                Based on your current holdings, consider rebalancing toward defensive sectors as volatility rises.
+                Your tech allocation is above the recommended threshold for your risk profile — diversifying into
+                energy or healthcare could reduce downside exposure heading into earnings season.
+            </div>
+
+            <div class="lock-overlay">
+                <span class="lock-icon">🔒</span>
+                <p>Unlock personalized portfolio advice</p>
+                <button class="upgrade-btn">Upgrade to Premium</button>
+            </div>
+        </section>
+
+        <section class="card news-card crypto-news">
+            <h2>Crypto News</h2>
+            <ul class="news-list">
+                <li>
+                    <a href="#">Bitcoin holds above $67K as ETF inflows continue</a>
+                    <span class="news-meta">CoinDesk · 2h ago</span>
+                </li>
+
+                <li>
+                    <a href="#">Ethereum gas fees drop after latest network upgrade</a>
+                    <span class="news-meta">Decrypt · 5h ago</span>
+                </li>
+
+                <li>
+                    <a href="#">Regulators signal clearer stance on stablecoin oversight</a>
+                    <span class="news-meta">Reuters · 8h ago</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="card news-card stock-news">
+            <h2>Stock News</h2>
+            <ul class="news-list">
+                <li>
+                    <a href="#">Fed signals rate path unchanged amid steady inflation data</a>
+                    <span class="news-meta">Bloomberg · 1h ago</span>
+                </li>
+                <li>
+                    <a href="#">Tech earnings beat expectations, futures tick higher</a>
+                    <span class="news-meta">CNBC · 4h ago</span>
+                </li>
+                <li>
+                    <a href="#">Oil prices slip on rising inventory data</a>
+                    <span class="news-meta">WSJ · 6h ago</span>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

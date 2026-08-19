@@ -1,0 +1,400 @@
+:root {
+    --bg: #0B0E13;
+    --bg-card: #12151C;
+    --bg-card-hover: #171B24;
+    --border: #232732;
+    --text: #E8EAED;
+    --text-muted: #8B93A1;
+    --accent: #E3B341;
+    --accent-dim: #8A6A22;
+    --up: #22C55E;
+    --down: #EF4444;
+    --radius: 10px;
+    --mono: ui-monospace, "SF Mono", "Roboto Mono", "Courier New", monospace;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+}
+
+/* ── Top bar ─────────────────────────────── */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+}
+
+.brand span {
+    color: var(--accent);
+}
+
+.nav {
+    display: flex;
+    gap: 1.75rem;
+}
+
+.nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid transparent;
+}
+
+.nav a.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+}
+
+.nav a:hover {
+    color: var(--text);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.user-menu button {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.user-menu button:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+}
+
+/* ── Scrolling ticker tape ───────────────── */
+
+.ticker-tape {
+    overflow: hidden;
+    background: #090B0F;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.ticker-track {
+    display: inline-flex;
+    animation: scroll-left 40s linear infinite;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.55rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    border-right: 1px solid var(--border);
+}
+
+.ticker-item .name {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.ticker-item .price {
+    color: var(--text);
+}
+
+.ticker-item .change.up {
+    color: var(--up);
+}
+
+.ticker-item .change.down {
+    color: var(--down);
+}
+
+/* ── Dashboard grid ───────────────────────── */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 1.25rem;
+    padding: 1.75rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.card h2 {
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.card h2 small {
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 0.4rem;
+}
+
+.watchlist-card {
+    grid-column: 1;
+}
+
+.portfolio-card {
+    grid-column: 2;
+}
+
+.tips-card {
+    grid-column: 1 / -1;
+    position: relative;
+}
+
+.crypto-news {
+    grid-column: 1;
+}
+
+.stock-news {
+    grid-column: 2;
+}
+
+/* ── Watchlist ───────────────────────────── */
+
+.watchlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.watchlist li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.3rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.watchlist li:last-child {
+    border-bottom: none;
+}
+
+.ticker-symbol {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.ticker-symbol .company {
+    display: block;
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.ticker-price {
+    text-align: right;
+    font-family: var(--mono);
+}
+
+.ticker-price .change {
+    display: block;
+    font-size: 0.78rem;
+}
+
+.change.up {
+    color: var(--up);
+}
+
+.change.down {
+    color: var(--down);
+}
+
+.add-ticker {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.add-ticker input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+}
+
+.add-ticker button {
+    background: var(--accent);
+    color: #1a1305;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ── Portfolio ───────────────────────────── */
+
+.portfolio-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.portfolio-value {
+    font-family: var(--mono);
+    font-size: 1.9rem;
+    font-weight: 700;
+}
+
+.portfolio-change {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+}
+
+.portfolio-chart {
+    width: 100%;
+    height: 120px;
+}
+
+/* ── Tips (premium lock) ─────────────────── */
+
+.tips-content {
+    filter: blur(5px);
+    user-select: none;
+    pointer-events: none;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 0.9rem;
+}
+
+.lock-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: rgba(11, 14, 19, 0.55);
+    backdrop-filter: blur(2px);
+    border-radius: var(--radius);
+}
+
+.lock-icon {
+    font-size: 1.4rem;
+    color: var(--accent);
+}
+
+.lock-overlay p {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.upgrade-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    color: #1a1305;
+    border: none;
+    border-radius: 6px;
+    padding: 0.55rem 1.1rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* ── News ────────────────────────────────── */
+
+.news-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.news-list li {
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.news-list li:last-child {
+    border-bottom: none;
+}
+
+.news-list a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.news-list a:hover {
+    color: var(--accent);
+}
+
+.news-meta {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ── Responsive ──────────────────────────── */
+
+@media (max-width: 800px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .watchlist-card,
+    .portfolio-card,
+    .tips-card,
+    .crypto-news,
+    .stock-news {
+        grid-column: 1;
+    }
+
+    .nav {
+        display: none;
+    }
+}

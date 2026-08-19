@@ -76,6 +76,35 @@ app.get('/welcome', async (req, res) => {
     res.json({ success: true, username });
 });
 
+// symbols shown in the ticker tape header
+// indices don't trade directly, so we use their tracking ETFs instead
+const TICKER_SYMBOLS = [
+    { symbol: 'SPY', name: 'S&P 500' },
+    { symbol: 'DIA', name: 'DOW' },
+    { symbol: 'QQQ', name: 'NASDAQ' },
+    { symbol: 'GLD', name: 'GOLD' },
+];
+
+// market summary endpoint
+app.get('/api/market-summary', async (req, res) => {
+    try {
+        const quotes = await Promise.all(TICKER_SYMBOLS.map(async (t) => {
+            const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${t.symbol}&token=${process.env.FINNHUB_API_KEY}`);
+            const data = await response.json();
+            return {
+                name: t.name,
+                price: data.c,
+                changePercent: data.dp,
+                up: data.dp >= 0
+            };
+        }));
+        res.json({ success: true, data: quotes });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to fetch market data' });
+    }
+});
+
 // function to start server
 async function start() {
     await connectRedis(); // connect to Redis first
