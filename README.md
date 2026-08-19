@@ -14,8 +14,8 @@ A full stack web app with session-based authentication. Planning to build practi
 - **Backend:** Node.js, Express
 - **Database:** PostgreSQL (user storage)
 - **Cache:** Redis (session tokens)
-- **Containerization:** Docker, Docker Compose
+- **Containerization:** Docker (backend)
 
-## How to Run
+## Host
 
-Requires Docker Desktop and must be run locally. Website will be hosted with some free service later.
+The backend is connected to Render to host while the frontend is hosted by Vercel.
