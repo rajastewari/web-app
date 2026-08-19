@@ -25,7 +25,14 @@ app.post('/register', async (req, res) => {
 
     // hash password and save user
     const hashed = await bcrypt.hash(password, 10);
-    await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', [username, hashed]);
+    const newUser = await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id', [username, hashed]);
+    const userId = newUser.rows[0].id;
+
+    // assign default role to new user (Free)
+    const freeRole = await pool.query("SELECT id FROM roles WHERE role_name = 'free'");
+    const roleId = freeRole.rows[0].id;
+    await pool.query('INSERT INTO user_roles (user_id, role_id) VALUES ($1, $2)', [userId, roleId]);
+
     res.json({ success: true, message: 'Account created' });
 });
 

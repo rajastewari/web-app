@@ -11,6 +11,23 @@ async function initDB() {
             password_hash TEXT NOT NULL
         )
     `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS roles (
+            id SERIAL PRIMARY KEY,
+            role_name VARCHAR(50) UNIQUE NOT NULL
+        )
+    `);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS user_roles (
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            role_id INT REFERENCES roles(id) ON DELETE CASCADE,
+            PRIMARY KEY (user_id, role_id)
+        )
+    `);
+    await pool.query(`
+        INSERT INTO roles (role_name) VALUES ('free'), ('premium'), ('admin')
+        ON CONFLICT (role_name) DO NOTHING
+    `);
 
     console.log('Database ready');
 }
