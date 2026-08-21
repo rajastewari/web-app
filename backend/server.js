@@ -5,6 +5,9 @@ const { pool, initDB } = require('./db');
 const crypto = require('crypto');
 const { client: redis, connectRedis } = require('./cache');
 
+const Parser = require('rss-parser');
+const rssParser = new Parser();
+
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -74,8 +77,7 @@ app.get('/welcome', async (req, res) => {
     res.json({ success: true, username });
 });
 
-// symbols shown in the ticker tape header
-// indices don't trade directly, so we use their tracking ETFs instead
+// using finnhub free tier so no access to the indices, so using tracker ETFs for ticker tape
 const TICKER_SYMBOLS = [
     { symbol: 'SPY', name: 'S&P 500' },
     { symbol: 'DIA', name: 'DOW' },
@@ -87,14 +89,16 @@ const TICKER_SYMBOLS = [
 app.get('/api/market-summary', async (req, res) => {
     try {
         const quotes = await Promise.all(TICKER_SYMBOLS.map(async (t) => {
+            // using finnhub API for real time data
             const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${t.symbol}&token=${process.env.FINNHUB_API_KEY}`);
             const data = await response.json();
 
-            // check to ensure API returns valid data
+            // check if API returns valid data
             if (typeof data.c !== 'number' || typeof data.dp !== 'number') {
                 return { name: t.name, price: null, changePercent: null, up: false };
             }
-
+            
+            // return formatted data for ticker tape
             return {
                 name: t.name,
                 price: data.c,
@@ -102,17 +106,66 @@ app.get('/api/market-summary', async (req, res) => {
                 up: data.dp >= 0
             };
         }));
+
         res.json({ success: true, data: quotes });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Failed to fetch market data' });
     }
 });
 
-// function to start server
+// pull data from public RSS feeds
+const NEWS_FEEDS = {
+    crypto: 'https://www.coindesk.com/arc/outboundfeeds/rss/',
+    stocks: 'https://www.cnbc.com/id/100003114/device/rss/rss.html'
+};
+
+// helper function to format/trim RSS feed
+function formatFeed(feed) {
+    return feed.items.slice(0, 5).map(item => ({
+        title: item.title,
+        link: item.link,
+        source: feed.title,
+        pubDate: item.pubDate
+    }));
+}
+
+// news endpoint
+app.get('/api/news/', async (req, res) => {
+
+    try {
+        // caching the news for 10 minutes to reduce load on the RSS feeds
+        const cached = await redis.get('news-summary');
+        if (cached) {
+            return res.json({ success: true, data: JSON.parse(cached) });
+        }
+
+        // parse the RSS feeds
+        const cryptoFeed = await rssParser.parseURL(NEWS_FEEDS.crypto);
+        const stocksFeed = await rssParser.parseURL(NEWS_FEEDS.stocks);
+
+        // format the feed using helper
+        const news = {
+            crypto: formatFeed(cryptoFeed),
+            stocks: formatFeed(stocksFeed)
+        };
+        
+        // redis only caches strings, so need to stringify the news object
+        await redis.set('news-summary', JSON.stringify(news), { EX: 600 });
+
+        res.json({ success: true, data: news });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({success: false, message: 'Failed to fetch news'});
+    }
+});
+
+// connect to redis, initialize database, and start server
 async function start() {
-    await connectRedis(); // connect to Redis first
-    await initDB(); // initialize database
+    await connectRedis();
+    await initDB();
     app.listen(3000, () => {
         console.log('Server running on port 3000');
     });

@@ -28,6 +28,7 @@ function signOut() {
     window.location.href = 'index.html';
 }
 
+// TICKER TAPE
 function renderTicker(tickerData) {
     const track = document.getElementById('ticker-track');
     const validItems = tickerData.filter(item => item.price !== null); // checking ticker data is valid
@@ -42,6 +43,11 @@ function renderTicker(tickerData) {
     `).join('');
 
     track.innerHTML = html + html;
+
+    // force reflow to restart the CSS animation
+    track.style.animation = 'none';
+    track.offsetHeight;
+    track.style.animation = '';
 }
 
 async function loadTicker() {
@@ -53,6 +59,35 @@ async function loadTicker() {
     }
 }
 
-loadTicker();
+loadTicker()
+
+
+// NEWS
+function renderNews(newsData, listId) {
+    const list = document.getElementById(listId);
+    
+    // noopener noreferrer prevents reverse tabnabbing
+    const html = newsData.map(item => `
+        <li>
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+            <span class="news-meta">${item.source} · ${item.pubDate}</span>
+        </li>
+    `).join('');
+    list.innerHTML = html;
+}
+
+async function loadNews() {
+    const response = await fetch('/api/news');
+    const data = await response.json();
+
+    if (data.success) {
+        renderNews(data.data.crypto, 'crypto-news-list');
+        renderNews(data.data.stocks, 'stock-news-list');
+    }
+}
+
+loadNews();
+
+
 // refresh every 60 seconds
 setInterval(loadTicker, 60000);
