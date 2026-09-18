@@ -18,7 +18,7 @@ services:
         image: postgres:16-alpine
         environment:
             POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}   # currently running only one container, so password is not used in render
             POSTGRES_DB: webapp
         ports:
             - "5432:5432"

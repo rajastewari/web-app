@@ -28,7 +28,15 @@ async function initDB() {
         INSERT INTO roles (role_name) VALUES ('free'), ('premium'), ('admin')
         ON CONFLICT (role_name) DO NOTHING
     `);
-
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS watchlists (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            symbol VARCHAR(10) NOT NULL,
+            added_at TIMESTAMPTZ DEFAULT NOW(),
+            UNIQUE(user_id, symbol)
+        )
+    `);
     console.log('Database ready');
 }
 
