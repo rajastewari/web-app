@@ -1,5 +1,7 @@
 # Web App
 
+**Live Demo:** [web-app-0l3x.onrender.com](https://web-app-0l3x.onrender.com/)
+
 Built a full-stack web app for tracking stocks, crypto, and market indices in real time, with a customizable watchlist, portfolio valuation and performance charting, and live financial news.
 
 ## Features
